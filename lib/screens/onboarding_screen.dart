@@ -17,35 +17,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   static const _slides = [
     _SlideData(
       icon: Icons.smart_toy_rounded,
-      title: 'AI Tour Guide',
+      title: 'AI Guide for Ethiopia',
       desc:
-          'Your personal AI guide narrates every artifact, painting, and landmark in your language. History like never before.',
+          'Your personal AI guide narrates Adwa, Lalibela, Axum, and more — in Amharic, English, and other languages.',
       imgUrl:
-          'https://images.unsplash.com/photo-1770713522187-d9c16e16a15b?w=800&h=500&fit=crop&auto=format',
+          'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&h=500&fit=crop&auto=format',
     ),
     _SlideData(
       icon: Icons.qr_code_scanner_rounded,
-      title: 'Scan QR Codes',
+      title: 'Scan Exhibit QR Codes',
       desc:
-          'Point your camera at any exhibit QR for instant history, audio narration, and interactive 3D content.',
+          'Point your camera at museum QR codes for instant history, audio, and AR previews of Ethiopian artifacts.',
       imgUrl:
-          'https://images.unsplash.com/photo-1765127959746-3f5925d9a2c7?w=800&h=500&fit=crop&auto=format',
+          'https://images.unsplash.com/photo-1572905421176-6fa2f11a236e?w=800&h=500&fit=crop&auto=format',
     ),
     _SlideData(
       icon: Icons.language_rounded,
       title: 'Multilingual Experiences',
       desc:
-          'Break language barriers. Translate, narrate, and explore history in 40+ languages effortlessly.',
+          'Explore heritage in Amharic, Afaan Oromo, Tigrinya, English, and more — break language barriers at every site.',
       imgUrl:
-          'https://images.unsplash.com/photo-1772617616268-a2f27d194fce?w=800&h=500&fit=crop&auto=format',
+          'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800&h=500&fit=crop&auto=format',
     ),
     _SlideData(
       icon: Icons.route_rounded,
       title: 'Personalized Tours',
       desc:
-          'AI crafts a custom itinerary based on your interests, time, and walking pace. Your perfect visit, every time.',
+          'AI crafts itineraries across Addis, Lalibela, Gondar, and Axum based on your time and interests.',
       imgUrl:
-          'https://images.unsplash.com/photo-1765470129726-3689336ff549?w=800&h=500&fit=crop&auto=format',
+          'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&h=500&fit=crop&auto=format',
     ),
   ];
 

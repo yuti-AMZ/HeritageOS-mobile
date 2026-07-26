@@ -1,42 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/app_colors.dart';
-import '../data/mock_data.dart';
 import '../models/heritage_place.dart';
+import '../providers/heritage_provider.dart';
 import 'heritage_place_screen.dart';
 
-class HeritageDirectoryScreen extends StatefulWidget {
+class HeritageDirectoryScreen extends ConsumerStatefulWidget {
   const HeritageDirectoryScreen({super.key});
   @override
-  State<HeritageDirectoryScreen> createState() => _HeritageDirectoryScreenState();
+  ConsumerState<HeritageDirectoryScreen> createState() => _HeritageDirectoryScreenState();
 }
 
-class _HeritageDirectoryScreenState extends State<HeritageDirectoryScreen> {
+class _HeritageDirectoryScreenState extends ConsumerState<HeritageDirectoryScreen> {
   String _selectedCategory = 'All';
-  String _selectedCountry = 'All';
+  String _selectedCity = 'All';
   final _searchController = TextEditingController();
 
   final _categories = ['All', 'Museum', 'Archaeological Site', 'Historical Monument', 'Natural Heritage'];
-  final _countries = ['All', 'Ethiopia', 'France', 'United Kingdom', 'Greece', 'United States', 'Italy', 'China', 'India'];
-
-  List<HeritagePlace> get _filteredPlaces {
-    return MockData.heritagePlaces.where((p) {
-      final matchCategory = _selectedCategory == 'All' || p.category == _selectedCategory;
-      final matchCountry = _selectedCountry == 'All' || p.country == _selectedCountry;
-      final matchSearch = _searchController.text.isEmpty ||
-          p.name.toLowerCase().contains(_searchController.text.toLowerCase()) ||
-          p.city.toLowerCase().contains(_searchController.text.toLowerCase());
-      return matchCategory && matchCountry && matchSearch;
-    }).toList();
-  }
+  final _cities = ['All', 'Addis Ababa', 'Lalibela', 'Axum', 'Gondar', 'Harar', 'Debark', 'Tiya'];
 
   @override
   Widget build(BuildContext context) {
+    final allPlaces = ref.watch(allPlacesProvider);
+
     return Scaffold(
       backgroundColor: AppColors.greyLight,
       body: SafeArea(
         child: Column(
           children: [
-            // Header
             Container(
               color: AppColors.green,
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
@@ -48,16 +39,19 @@ class _HeritageDirectoryScreenState extends State<HeritageDirectoryScreen> {
                     children: [
                       const Text('Heritage Directory',
                           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.white)),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(10)),
-                        child: Text('${_filteredPlaces.length} sites',
-                            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.green)),
+                      allPlaces.when(
+                        data: (places) => Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(10)),
+                          child: Text('${places.length} sites',
+                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.green)),
+                        ),
+                        loading: () => const SizedBox(width: 60, height: 20),
+                        error: (_, __) => const SizedBox(),
                       ),
                     ],
                   ),
                   const SizedBox(height: 14),
-                  // Search
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(color: Colors.white.withOpacity(0.12), borderRadius: BorderRadius.circular(14)),
@@ -85,7 +79,6 @@ class _HeritageDirectoryScreenState extends State<HeritageDirectoryScreen> {
               ),
             ),
 
-            // Category filter
             SizedBox(
               height: 48,
               child: ListView.separated(
@@ -117,19 +110,18 @@ class _HeritageDirectoryScreenState extends State<HeritageDirectoryScreen> {
               ),
             ),
 
-            // Country filter
             SizedBox(
               height: 40,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                itemCount: _countries.length,
+                itemCount: _cities.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 6),
                 itemBuilder: (_, i) {
-                  final country = _countries[i];
-                  final active = _selectedCountry == country;
+                  final city = _cities[i];
+                  final active = _selectedCity == city;
                   return GestureDetector(
-                    onTap: () => setState(() => _selectedCountry = country),
+                    onTap: () => setState(() => _selectedCity = city),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -138,7 +130,7 @@ class _HeritageDirectoryScreenState extends State<HeritageDirectoryScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       alignment: Alignment.center,
-                      child: Text(country,
+                      child: Text(city,
                           style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
@@ -149,10 +141,20 @@ class _HeritageDirectoryScreenState extends State<HeritageDirectoryScreen> {
               ),
             ),
 
-            // Places list
             Expanded(
-              child: _filteredPlaces.isEmpty
-                  ? Center(
+              child: allPlaces.when(
+                data: (places) {
+                  final filtered = places.where((p) {
+                    final matchCategory = _selectedCategory == 'All' || p.category == _selectedCategory;
+                    final matchCity = _selectedCity == 'All' || p.city == _selectedCity;
+                    final matchSearch = _searchController.text.isEmpty ||
+                        p.name.toLowerCase().contains(_searchController.text.toLowerCase()) ||
+                        p.city.toLowerCase().contains(_searchController.text.toLowerCase());
+                    return matchCategory && matchCity && matchSearch;
+                  }).toList();
+
+                  if (filtered.isEmpty) {
+                    return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -162,12 +164,18 @@ class _HeritageDirectoryScreenState extends State<HeritageDirectoryScreen> {
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.green.withOpacity(0.5))),
                         ],
                       ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-                      itemCount: _filteredPlaces.length,
-                      itemBuilder: (_, i) => _placeCard(_filteredPlaces[i]),
-                    ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                    itemCount: filtered.length,
+                    itemBuilder: (_, i) => _placeCard(filtered[i]),
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, _) => Center(child: Text('Error: $e')),
+              ),
             ),
           ],
         ),
@@ -210,8 +218,7 @@ class _HeritageDirectoryScreenState extends State<HeritageDirectoryScreen> {
                   ),
                 ),
                 Positioned(
-                  top: 12,
-                  left: 12,
+                  top: 12, left: 12,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(8)),
@@ -220,20 +227,17 @@ class _HeritageDirectoryScreenState extends State<HeritageDirectoryScreen> {
                   ),
                 ),
                 Positioned(
-                  top: 12,
-                  right: 12,
+                  top: 12, right: 12,
                   child: Row(
                     children: [
-                      Icon(Icons.star, size: 12, color: AppColors.gold),
+                      const Icon(Icons.star, size: 12, color: AppColors.gold),
                       const SizedBox(width: 3),
                       Text('${place.rating}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
                     ],
                   ),
                 ),
                 Positioned(
-                  bottom: 12,
-                  left: 12,
-                  right: 12,
+                  bottom: 12, left: 12, right: 12,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

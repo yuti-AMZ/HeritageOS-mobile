@@ -1,187 +1,165 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
-import '../constants/app_strings.dart';
-import '../models/place_model.dart';
+import '../utils/exhibit_lookup.dart';
 import 'artifact_screen.dart';
 
-class QRScreen extends StatelessWidget {
+class QRScreen extends StatefulWidget {
   const QRScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final scanned = const [
-      ScannedItem(
-          name: 'Rosetta Stone',
-          museum: 'British Museum',
-          time: '2 min ago',
-          imageUrl:
-              'https://images.unsplash.com/photo-1782466357373-515da25d313e?w=100&h=100&fit=crop'),
-      ScannedItem(
-          name: 'Venus de Milo',
-          museum: 'The Louvre',
-          time: 'Yesterday',
-          imageUrl:
-              'https://images.unsplash.com/photo-1771456294161-7d09c625cf96?w=100&h=100&fit=crop'),
-      ScannedItem(
-          name: 'Elgin Marbles',
-          museum: 'British Museum',
-          time: '2 days ago',
-          imageUrl:
-              'https://images.unsplash.com/photo-1770713522187-d9c16e16a15b?w=100&h=100&fit=crop'),
-    ];
+  State<QRScreen> createState() => _QRScreenState();
+}
 
+class _QRScreenState extends State<QRScreen> {
+  bool _isLookingUp = false;
+  String? _statusMessage;
+
+  void _openDemoScan() async {
+    setState(() {
+      _isLookingUp = true;
+      _statusMessage = 'Looking up demo exhibit...';
+    });
+
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final match = ExhibitLookup.byQrCode('ADWA-DIORAMA-001');
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLookingUp = false;
+      _statusMessage = null;
+    });
+
+    if (match != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ArtifactScreen(exhibit: match.exhibit, placeName: match.place.name),
+        ),
+      );
+    } else {
+      setState(() {
+        _statusMessage = 'Exhibit not found';
+      });
+    }
+  }
+
+  void _onDemoQrTap(String qrCode) async {
+    setState(() {
+      _isLookingUp = true;
+      _statusMessage = 'Looking up: $qrCode';
+    });
+
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final match = ExhibitLookup.byQrCode(qrCode);
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLookingUp = false;
+      _statusMessage = null;
+    });
+
+    if (match != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ArtifactScreen(exhibit: match.exhibit, placeName: match.place.name),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0C0C0C),
       body: SafeArea(
         child: Column(
           children: [
-            // Header
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(AppStrings.scanQR,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white)),
+                  const Text('Scan QR Code',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white)),
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                        color: AppColors.gold,
+                        color: AppColors.gold.withOpacity(0.35),
                         borderRadius: BorderRadius.circular(12)),
-                    child: const Text('Flash Off',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.green)),
+                    child: const Text(
+                      'Demo Mode',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.gold),
+                    ),
                   ),
                 ],
               ),
             ),
 
-            // Scanner viewport
+            // Camera placeholder
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
-              height: 330,
+              height: 200,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
                   color: Colors.grey[900]),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(24),
                 child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    Image.network(
-                      'https://images.unsplash.com/photo-1765127959746-3f5925d9a2c7?w=600&h=800&fit=crop',
-                      width: double.infinity,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      opacity: const AlwaysStoppedAnimation(0.75),
-                      errorBuilder: (_, __, ___) =>
-                          Container(color: Colors.grey[800]),
-                    ),
-                    Container(
-                      color: Colors.black.withOpacity(0.45),
-                    ),
-                    // Scanning frame
+                    Container(color: Colors.grey[900]),
                     Center(
-                      child: SizedBox(
-                        width: 224,
-                        height: 224,
-                        child: Stack(
-                          children: [
-                            // Corner brackets
-                            ...List.generate(4, (i) {
-                              final isTop = i < 2;
-                              final isLeft = i.isEven;
-                              return Positioned(
-                                top: isTop ? 0 : null,
-                                bottom: isTop ? null : 0,
-                                left: isLeft ? 0 : null,
-                                right: isLeft ? null : 0,
-                                child: Container(
-                                  width: 36,
-                                  height: 36,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      top: isTop
-                                          ? const BorderSide(
-                                              color: AppColors.gold,
-                                              width: 3)
-                                          : BorderSide.none,
-                                      bottom: !isTop
-                                          ? const BorderSide(
-                                              color: AppColors.gold,
-                                              width: 3)
-                                          : BorderSide.none,
-                                      left: isLeft
-                                          ? const BorderSide(
-                                              color: AppColors.gold,
-                                              width: 3)
-                                          : BorderSide.none,
-                                      right: !isLeft
-                                          ? const BorderSide(
-                                              color: AppColors.gold,
-                                              width: 3)
-                                          : BorderSide.none,
-                                    ),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: isTop && isLeft
-                                          ? const Radius.circular(8)
-                                          : Radius.zero,
-                                      topRight: isTop && !isLeft
-                                          ? const Radius.circular(8)
-                                          : Radius.zero,
-                                      bottomLeft: !isTop && isLeft
-                                          ? const Radius.circular(8)
-                                          : Radius.zero,
-                                      bottomRight: !isTop && !isLeft
-                                          ? const Radius.circular(8)
-                                          : Radius.zero,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                          ],
-                        ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.qr_code_scanner_rounded,
+                              size: 48, color: AppColors.gold.withOpacity(0.5)),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Camera unavailable in demo mode.\nTap the demo QR codes below.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 12, height: 1.5, color: Colors.white.withOpacity(0.7)),
+                          ),
+                        ],
                       ),
                     ),
-                    Center(
-                      child: Container(
-                        width: 200,
-                        height: 2,
-                        decoration: BoxDecoration(
-                          color: AppColors.gold,
-                          boxShadow: [
-                            BoxShadow(
-                                color: AppColors.gold.withOpacity(0.5),
-                                blurRadius: 10)
-                          ],
+                    if (_isLookingUp)
+                      Container(
+                        color: Colors.black54,
+                        child: const Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircularProgressIndicator(color: AppColors.gold),
+                              SizedBox(height: 12),
+                              Text('Looking up exhibit...',
+                                  style: TextStyle(color: Colors.white, fontSize: 14)),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
                     Positioned(
-                      bottom: 16,
-                      left: 0,
-                      right: 0,
-                      child: Text(AppStrings.pointAtQR,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white70)),
+                      bottom: 16, left: 16, right: 16,
+                      child: Text(
+                        _statusMessage ?? '',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: _statusMessage != null ? Colors.orangeAccent : Colors.white70,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-
             const SizedBox(height: 16),
-
-            // Recently scanned
             Expanded(
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -192,83 +170,32 @@ class QRScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AppStrings.recentlyScanned,
-                        style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.gold)),
+                    const Text('Demo QR Codes — Tap to scan',
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.gold)),
                     const SizedBox(height: 12),
-                    ...scanned.map((item) => GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const ArtifactScreen())),
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 8),
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                                color: const Color(0xFF252525),
-                                borderRadius: BorderRadius.circular(16)),
-                            child: Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.network(item.imageUrl,
-                                      width: 44,
-                                      height: 44,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) =>
-                                          Container(
-                                              width: 44,
-                                              height: 44,
-                                              color: Colors.grey[700])),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(item.name,
-                                          style: const TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white)),
-                                      const SizedBox(height: 2),
-                                      Text(item.museum,
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              color: AppColors.gold
-                                                  .withOpacity(0.6))),
-                                    ],
-                                  ),
-                                ),
-                                Text(item.time,
-                                    style: const TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.white38)),
-                              ],
-                            ),
-                          ),
-                        )),
-                    const Spacer(),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          _demoQrCard('ADWA-DIORAMA-001', 'Battle of Adwa Diorama', 'Adwa Victory Memorial'),
+                          _demoQrCard('NME-LUCY-001', 'Lucy (Dinkinesh)', 'National Museum'),
+                          _demoQrCard('LALIBELA-GIYORGIS-001', 'Bete Giyorgis', 'Lalibela Rock Churches'),
+                          _demoQrCard('AXUM-STELE-001', 'Great Stele of Axum', 'Axum Archaeological Site'),
+                          _demoQrCard('GONDAR-FASIL-001', 'Castle of Fasilides', 'Fasil Ghebbi'),
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const ArtifactScreen())),
+                        onPressed: _isLookingUp ? null : _openDemoScan,
                         icon: const Icon(Icons.camera_alt, size: 16),
-                        label: Text(AppStrings.scanArtifact),
+                        label: const Text('Quick Demo Scan'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.gold,
                           foregroundColor: AppColors.green,
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16)),
-                          textStyle: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -276,6 +203,40 @@ class QRScreen extends StatelessWidget {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _demoQrCard(String qrCode, String name, String museum) {
+    return GestureDetector(
+      onTap: () => _onDemoQrTap(qrCode),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+            color: const Color(0xFF252525),
+            borderRadius: BorderRadius.circular(16)),
+        child: Row(
+          children: [
+            Container(
+              width: 44, height: 44,
+              decoration: BoxDecoration(color: AppColors.gold.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
+              child: const Icon(Icons.qr_code_2, color: AppColors.gold, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
+                  const SizedBox(height: 2),
+                  Text(museum, style: TextStyle(fontSize: 11, color: AppColors.gold.withOpacity(0.6))),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.3)),
           ],
         ),
       ),

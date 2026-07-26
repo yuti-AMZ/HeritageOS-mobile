@@ -1,20 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/app_colors.dart';
-import '../constants/app_strings.dart';
 import '../models/heritage_place.dart';
+import '../providers/chat_provider.dart';
 
-class HeritagePlaceAIScreen extends StatefulWidget {
+class HeritagePlaceAIScreen extends ConsumerStatefulWidget {
   final HeritagePlace place;
   const HeritagePlaceAIScreen({super.key, required this.place});
   @override
-  State<HeritagePlaceAIScreen> createState() => _HeritagePlaceAIScreenState();
+  ConsumerState<HeritagePlaceAIScreen> createState() => _HeritagePlaceAIScreenState();
 }
 
-class _HeritagePlaceAIScreenState extends State<HeritagePlaceAIScreen> {
+class _HeritagePlaceAIScreenState extends ConsumerState<HeritagePlaceAIScreen> {
   final _controller = TextEditingController();
-  final List<Map<String, String>> _messages = [];
 
-  final _suggestions = [
+  late final Map<String, String> _chatParams;
+  late final StateNotifierProvider<ChatNotifier, ChatState> _chatProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _chatParams = {
+      'placeName': widget.place.name,
+      'placeDescription': widget.place.description,
+      'exhibitInfo': widget.place.exhibits.isNotEmpty
+          ? widget.place.exhibits.first.name
+          : '',
+    };
+    _chatProvider = chatProvider(_chatParams);
+  }
+
+  final _suggestions = const [
     'Tell me about this exhibit',
     'What is the history of this place?',
     'Any fun facts?',
@@ -24,23 +40,18 @@ class _HeritagePlaceAIScreenState extends State<HeritagePlaceAIScreen> {
 
   void _send() {
     if (_controller.text.trim().isEmpty) return;
-    setState(() {
-      _messages.add({'role': 'user', 'text': _controller.text});
-      _messages.add({
-        'role': 'ai',
-        'text': 'Great question about ${widget.place.name}! This heritage site has a rich history spanning centuries. The ${widget.place.exhibits.isNotEmpty ? widget.place.exhibits.first.name : "main exhibit"} is particularly noteworthy — it tells the story of resilience and cultural preservation that defines this place.'
-      });
-      _controller.clear();
-    });
+    ref.read(_chatProvider.notifier).sendMessage(_controller.text.trim());
+    _controller.clear();
   }
 
   @override
   Widget build(BuildContext context) {
+    final chatState = ref.watch(_chatProvider);
+
     return Scaffold(
       backgroundColor: AppColors.greyLight,
       body: Column(
         children: [
-          // Header
           Container(
             color: AppColors.green,
             child: SafeArea(
@@ -71,12 +82,19 @@ class _HeritagePlaceAIScreenState extends State<HeritagePlaceAIScreen> {
                           Text('${widget.place.name} AI Guide',
                               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white)),
                           const SizedBox(height: 2),
-                          const Row(
+                          Row(
                             children: [
-                              CircleAvatar(radius: 4, backgroundColor: Color(0xFF4ADE80)),
-                              SizedBox(width: 6),
-                              Text('Context-aware · 40+ languages',
-                                  style: TextStyle(fontSize: 10, color: Colors.white60)),
+                              CircleAvatar(
+                                  radius: 4,
+                                  backgroundColor: chatState.isLoading
+                                      ? Colors.amber
+                                      : const Color(0xFF4ADE80)),
+                              const SizedBox(width: 6),
+                              Text(
+                                  chatState.isLoading
+                                      ? 'Thinking...'
+                                      : 'Online · 40+ languages',
+                                  style: const TextStyle(fontSize: 10, color: Colors.white60)),
                             ],
                           ),
                         ],
@@ -100,9 +118,8 @@ class _HeritagePlaceAIScreenState extends State<HeritagePlaceAIScreen> {
             ),
           ),
 
-          // Messages
           Expanded(
-            child: _messages.isEmpty
+            child: chatState.messages.isEmpty
                 ? Padding(
                     padding: const EdgeInsets.all(24),
                     child: Column(
@@ -135,10 +152,45 @@ class _HeritagePlaceAIScreenState extends State<HeritagePlaceAIScreen> {
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                    itemCount: _messages.length,
+                    itemCount: chatState.messages.length + (chatState.isLoading ? 1 : 0),
                     itemBuilder: (_, i) {
-                      final msg = _messages[i];
-                      final isUser = msg['role'] == 'user';
+                      if (i == chatState.messages.length) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 30, height: 30,
+                                decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(15)),
+                                child: const Icon(Icons.auto_awesome, size: 13, color: AppColors.green),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(18),
+                                  boxShadow: [BoxShadow(color: AppColors.green.withOpacity(0.08), blurRadius: 8)],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                      width: 16, height: 16,
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.gold),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text('Thinking...', style: TextStyle(fontSize: 13, color: AppColors.green.withOpacity(0.5))),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+
+                      final msg = chatState.messages[i];
+                      final isUser = msg.role == 'user';
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
                         child: Row(
@@ -166,7 +218,7 @@ class _HeritagePlaceAIScreenState extends State<HeritagePlaceAIScreen> {
                                   ),
                                   boxShadow: isUser ? null : [BoxShadow(color: AppColors.green.withOpacity(0.08), blurRadius: 8)],
                                 ),
-                                child: Text(msg['text']!, style: TextStyle(fontSize: 13, height: 1.5, color: isUser ? Colors.white : AppColors.green)),
+                                child: Text(msg.text, style: TextStyle(fontSize: 13, height: 1.5, color: isUser ? Colors.white : AppColors.green)),
                               ),
                             ),
                           ],
@@ -176,7 +228,13 @@ class _HeritagePlaceAIScreenState extends State<HeritagePlaceAIScreen> {
                   ),
           ),
 
-          // Input
+          if (chatState.error != null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Colors.red.shade50,
+              child: Text(chatState.error!, style: TextStyle(fontSize: 12, color: Colors.red.shade700)),
+            ),
+
           Container(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
             color: Colors.white,
@@ -198,7 +256,7 @@ class _HeritagePlaceAIScreenState extends State<HeritagePlaceAIScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: _send,
+                    onTap: chatState.isLoading ? null : _send,
                     child: Container(
                       width: 38, height: 38,
                       decoration: BoxDecoration(

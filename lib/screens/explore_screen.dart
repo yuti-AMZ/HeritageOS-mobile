@@ -13,21 +13,21 @@ class ExploreScreen extends StatefulWidget {
 class _ExploreScreenState extends State<ExploreScreen> {
   String _filter = 'All';
   bool _isMap = false;
-  final _filters = ['All', 'Museums', 'Ruins', 'Parks', 'Galleries', 'Landmarks'];
+  final _filters = ['All', 'Museum', 'Ruins', 'Park', 'Church', 'Castle'];
 
   final _places = const [
-    Place(name: 'The Louvre', location: 'Paris', type: 'Museum', rating: 4.9,
-        imageUrl: 'https://images.unsplash.com/photo-1770713522187-d9c16e16a15b?w=400&h=300&fit=crop'),
-    Place(name: 'Acropolis', location: 'Athens', type: 'Ruins', rating: 4.9,
-        imageUrl: 'https://images.unsplash.com/photo-1566927244565-9a96a147a998?w=400&h=300&fit=crop'),
-    Place(name: 'Yosemite NP', location: 'California', type: 'Park', rating: 4.8,
-        imageUrl: 'https://images.unsplash.com/photo-1491590324047-588cc8277f59?w=400&h=300&fit=crop'),
-    Place(name: 'British Museum', location: 'London', type: 'Museum', rating: 4.8,
-        imageUrl: 'https://images.unsplash.com/photo-1782466357373-515da25d313e?w=400&h=300&fit=crop'),
-    Place(name: 'Pompeii Ruins', location: 'Naples', type: 'Ruins', rating: 4.7,
+    Place(name: 'Adwa Victory Memorial', location: 'Addis Ababa', type: 'Museum', rating: 4.8,
         imageUrl: 'https://images.unsplash.com/photo-1572905421176-6fa2f11a236e?w=400&h=300&fit=crop'),
-    Place(name: 'Uffizi Gallery', location: 'Florence', type: 'Gallery', rating: 4.8,
-        imageUrl: 'https://images.unsplash.com/photo-1772617616268-a2f27d194fce?w=400&h=300&fit=crop'),
+    Place(name: 'Rock Churches of Lalibela', location: 'Lalibela', type: 'Church', rating: 4.9,
+        imageUrl: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=300&fit=crop'),
+    Place(name: 'Axum Obelisks', location: 'Axum', type: 'Ruins', rating: 4.8,
+        imageUrl: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=300&fit=crop'),
+    Place(name: 'National Museum', location: 'Addis Ababa', type: 'Museum', rating: 4.7,
+        imageUrl: 'https://images.unsplash.com/photo-1566127444979-b20d8ce2484a?w=400&h=300&fit=crop'),
+    Place(name: 'Fasil Ghebbi', location: 'Gondar', type: 'Castle', rating: 4.7,
+        imageUrl: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&h=300&fit=crop'),
+    Place(name: 'Simien Mountains', location: 'Debark', type: 'Park', rating: 4.9,
+        imageUrl: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&h=300&fit=crop'),
   ];
 
   @override

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/app_colors.dart';
-import '../data/mock_data.dart';
+import '../providers/auth_provider.dart';
+import '../providers/heritage_provider.dart';
 import '../models/place_model.dart';
-import '../screens/artifact_screen.dart';
-import '../screens/explore_screen.dart';
 import '../screens/ai_guide_screen.dart';
 import '../screens/qr_screen.dart';
 import '../screens/profile_screen.dart';
@@ -16,27 +16,27 @@ import '../screens/tour_screen.dart';
 import '../widgets/status_bar.dart';
 import '../widgets/bottom_nav.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _navIdx = 0;
 
   final _categories = const [
-    Category(icon: '🏛️', label: 'Museums', count: 48),
-    Category(icon: '🏛️', label: 'Landmarks', count: 124),
-    Category(icon: '⛰️', label: 'Ruins', count: 36),
-    Category(icon: '🌲', label: 'Parks', count: 82),
-    Category(icon: '🎨', label: 'Galleries', count: 57),
+    Category(icon: '🏛️', label: 'Museums', count: 12),
+    Category(icon: '⛪', label: 'Churches', count: 28),
+    Category(icon: '🗿', label: 'Ruins', count: 18),
+    Category(icon: '⛰️', label: 'Parks', count: 9),
+    Category(icon: '🏰', label: 'Castles', count: 6),
   ];
 
   final _events = const [
-    Event(title: 'Ancient Egypt Exhibition', venue: 'Metropolitan Museum', date: 'Aug 15', time: '10:00 AM'),
-    Event(title: 'Renaissance Art Night', venue: 'National Gallery', date: 'Aug 22', time: '7:00 PM'),
-    Event(title: 'Sculpture Symposium', venue: 'The Getty Center', date: 'Sep 3', time: '2:00 PM'),
+    Event(title: 'Adwa Victory Day Commemoration', venue: 'Adwa Memorial, Addis', date: 'Mar 1', time: '9:00 AM'),
+    Event(title: 'Timkat Festival Guide', venue: 'Gondar · Fasilides Bath', date: 'Jan 19', time: '6:00 AM'),
+    Event(title: 'Lalibela Pilgrimage Walk', venue: 'Rock Churches', date: 'Sep 12', time: '7:00 AM'),
   ];
 
   @override
@@ -60,9 +60,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHomeContent() {
+    final authUser = ref.watch(authStateProvider).value;
+    final userProfile = ref.watch(userProfileProvider);
+    final featuredPlaces = ref.watch(featuredPlacesProvider);
+
+    final userName = userProfile.value?.name ?? authUser?.displayName ?? 'Guest';
+    final initials = userName.isNotEmpty
+        ? userName.split(' ').map((n) => n[0]).take(2).join().toUpperCase()
+        : '??';
+
     return Column(
       children: [
-        // Header
         Container(
           color: AppColors.green,
           child: Column(
@@ -79,11 +87,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Good Morning ☀️',
+                            Text('Selam ☀️',
                                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.gold)),
                             const SizedBox(height: 2),
-                            const Text('Sarah Chen',
-                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.white)),
+                            Text(userName,
+                                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.white)),
                           ],
                         ),
                         Row(
@@ -111,8 +119,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             CircleAvatar(
                               radius: 20,
                               backgroundColor: AppColors.gold,
-                              child: const Text('SC',
-                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: AppColors.green)),
+                              backgroundImage: authUser?.photoURL != null
+                                  ? NetworkImage(authUser!.photoURL!)
+                                  : null,
+                              child: authUser?.photoURL == null
+                                  ? Text(initials,
+                                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: AppColors.green))
+                                  : null,
                             ),
                           ],
                         ),
@@ -127,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Icon(Icons.search, color: Colors.white.withOpacity(0.65), size: 18),
                           const SizedBox(width: 10),
-                          Text('Search museums, heritage sites…',
+                          Text('Search Lalibela, Axum, Adwa…',
                               style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.55))),
                         ],
                       ),
@@ -139,103 +152,106 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
 
-        // Scrollable content
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 80),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Featured Heritage Sites
                 _sectionHeader('Featured Heritage Sites', 'See all'),
                 SizedBox(
                   height: 200,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: MockData.heritagePlaces.where((p) => p.isFeatured).length,
-                    itemBuilder: (_, i) {
-                      final place = MockData.heritagePlaces.where((p) => p.isFeatured).toList()[i];
-                      return GestureDetector(
-                        onTap: () => Navigator.push(
-                            context, MaterialPageRoute(builder: (_) => HeritagePlaceScreen(place: place))),
-                        child: Container(
-                          width: 200,
-                          margin: const EdgeInsets.only(right: 16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [BoxShadow(color: AppColors.green.withOpacity(0.1), blurRadius: 12)],
-                          ),
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: SizedBox(
-                                  width: 200, height: 200,
-                                  child: Image.network(place.imageUrl, fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) => Container(color: AppColors.sand)),
-                                ),
-                              ),
-                              Container(
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                                    colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                  child: featuredPlaces.when(
+                    data: (places) => places.isEmpty
+                        ? const Center(child: Text('No featured places'))
+                        : ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            itemCount: places.length,
+                            itemBuilder: (_, i) {
+                              final place = places[i];
+                              return GestureDetector(
+                                onTap: () => Navigator.push(
+                                    context, MaterialPageRoute(builder: (_) => HeritagePlaceScreen(place: place))),
+                                child: Container(
+                                  width: 200,
+                                  margin: const EdgeInsets.only(right: 16),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [BoxShadow(color: AppColors.green.withOpacity(0.1), blurRadius: 12)],
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: SizedBox(
+                                          width: 200, height: 200,
+                                          child: Image.network(place.imageUrl, fit: BoxFit.cover,
+                                              errorBuilder: (_, __, ___) => Container(color: AppColors.sand)),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 200,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                                            colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 12, left: 12,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                          decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(8)),
+                                          child: Text(place.category,
+                                              style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.green)),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 12, right: 12,
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.star, size: 11, color: AppColors.gold),
+                                            const SizedBox(width: 3),
+                                            Text('${place.rating}',
+                                                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white)),
+                                          ],
+                                        ),
+                                      ),
+                                      Positioned(
+                                        bottom: 16, left: 16, right: 16,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(place.name,
+                                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                                            const SizedBox(height: 4),
+                                            Row(
+                                              children: [
+                                                const Icon(Icons.location_on, size: 10, color: AppColors.gold),
+                                                const SizedBox(width: 4),
+                                                Text('${place.city}, ${place.country}',
+                                                    style: const TextStyle(fontSize: 11, color: Colors.white70)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 12, left: 12,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(8)),
-                                  child: Text(place.category,
-                                      style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.green)),
-                                ),
-                              ),
-                              Positioned(
-                                top: 12, right: 12,
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.star, size: 11, color: AppColors.gold),
-                                    const SizedBox(width: 3),
-                                    Text('${place.rating}',
-                                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white)),
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 16, left: 16, right: 16,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(place.name,
-                                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.location_on, size: 10, color: AppColors.gold),
-                                        const SizedBox(width: 4),
-                                        Text('${place.city}, ${place.country}',
-                                            style: const TextStyle(fontSize: 11, color: Colors.white70)),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        ),
-                      );
-                    },
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (e, _) => Center(child: Text('Error: $e')),
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
-                // Categories
                 _sectionHeader('Categories', 'See all'),
                 SizedBox(
                   height: 90,
@@ -249,7 +265,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 20),
 
-                // Quick Actions
                 _sectionHeader('Quick Actions', ''),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -279,7 +294,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 20),
 
-                // Upcoming Events
                 _sectionHeader('Upcoming Events', 'See all'),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),

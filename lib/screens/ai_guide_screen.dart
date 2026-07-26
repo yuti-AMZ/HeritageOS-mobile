@@ -15,14 +15,14 @@ class _AIGuideScreenState extends State<AIGuideScreen> {
     const ChatMessage(
         role: 'ai',
         text:
-            'Welcome to Heritage AI Guide! I can help you explore museums, artifacts, and heritage sites. What would you like to know?'),
+            'Selam! I\'m your Ethiopian heritage AI guide. Ask me about Adwa, Lalibela, Lucy, Axum, Gondar, or any site you\'re visiting.'),
   ];
 
   final _suggestions = const [
-    'Tell me about this artifact',
-    'What era is this from?',
-    'Any fun facts?',
-    'Translate to Spanish',
+    'Tell me about the Battle of Adwa',
+    'What is special about Lalibela?',
+    'Who was Lucy (Dinkinesh)?',
+    'Translate to Amharic',
   ];
 
   void _send() {
@@ -32,7 +32,7 @@ class _AIGuideScreenState extends State<AIGuideScreen> {
       _messages.add(const ChatMessage(
           role: 'ai',
           text:
-              'Fascinating question! This artifact dates to approximately 1350 BCE during Ancient Egypt\'s New Kingdom period. It was crafted from faience — a glazed ceramic material prized for its brilliant blue-green hue symbolizing fertility and eternal life.'));
+              'Great question! On March 1, 1896, Ethiopian forces under Emperor Menelik II and Empress Taytu defeated Italy at Adwa — a victory that kept Ethiopia independent and inspired anti-colonial movements across Africa. Visit the Adwa Victory Memorial in Addis Ababa to see the diorama and oral histories.'));
       _controller.clear();
     });
   }
@@ -77,7 +77,7 @@ class _AIGuideScreenState extends State<AIGuideScreen> {
                               CircleAvatar(
                                   radius: 4, backgroundColor: Color(0xFF4ADE80)),
                               SizedBox(width: 6),
-                              Text('Online · 40+ Languages',
+                              Text('Online · Amharic, English & more',
                                   style: TextStyle(
                                       fontSize: 11, color: Colors.white60)),
                             ],

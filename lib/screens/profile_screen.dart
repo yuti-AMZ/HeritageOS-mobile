@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/app_colors.dart';
-import '../data/mock_data.dart';
+import '../providers/auth_provider.dart';
 import 'saved_places_screen.dart';
+import 'home_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userProfile = ref.watch(userProfileProvider);
+
+    final name = userProfile.value?.name ?? 'Heritage Explorer';
+    final email = userProfile.value?.email ?? 'explorer@heritageos.com';
+    final initials = name.isNotEmpty
+        ? name.split(' ').map((n) => n[0]).take(2).join().toUpperCase()
+        : '??';
+
     return Scaffold(
       backgroundColor: AppColors.greyLight,
       body: SafeArea(
@@ -19,42 +29,41 @@ class ProfileScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.green)),
               const SizedBox(height: 24),
               CircleAvatar(
-                radius: 48, backgroundColor: AppColors.gold,
-                child: const Text('SC',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: AppColors.green)),
+                radius: 48,
+                backgroundColor: AppColors.gold,
+                backgroundImage: null,
+                child: Text(initials,
+                    style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: AppColors.green)),
               ),
               const SizedBox(height: 12),
-              const Text('Sarah Chen',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.green)),
+              Text(name,
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.green)),
               const SizedBox(height: 4),
-              Text('sarah@example.com',
+              Text(email,
                   style: TextStyle(fontSize: 13, color: AppColors.green.withOpacity(0.5))),
               const SizedBox(height: 24),
 
-              // Stats
               Row(
                 children: [
-                  _stat('12', 'Tours'),
-                  _stat('45', 'Scans'),
-                  _stat('8', 'Badges'),
-                  _stat('3', 'Countries'),
+                  _stat('2', 'Tours'),
+                  _stat('3', 'Scans'),
+                  _stat('4', 'Badges'),
+                  _stat('0', 'Saved'),
                 ],
               ),
 
               const SizedBox(height: 24),
 
-              // Saved places
               _sectionTitle('My Collection'),
-              _menuTile(Icons.bookmark_rounded, 'Saved Places', '12 sites', onTap: () {
+              _menuTile(Icons.bookmark_rounded, 'Saved Places', '', onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const SavedPlacesScreen()));
               }),
-              _menuTile(Icons.history_rounded, 'Tour History', '8 tours'),
-              _menuTile(Icons.favorite_rounded, 'Favorites', '5 places'),
-              _menuTile(Icons.download_rounded, 'Offline Guides', '2 sites'),
+              _menuTile(Icons.history_rounded, 'Tour History', ''),
+              _menuTile(Icons.favorite_rounded, 'Favorites', ''),
+              _menuTile(Icons.download_rounded, 'Offline Guides', ''),
 
               const SizedBox(height: 16),
 
-              // Settings
               _sectionTitle('Settings'),
               _menuTile(Icons.language_rounded, 'Language', 'English'),
               _menuTile(Icons.notifications_rounded, 'Notifications', 'On'),
@@ -65,13 +74,19 @@ class ProfileScreen extends StatelessWidget {
 
               _sectionTitle('Support'),
               _menuTile(Icons.help_rounded, 'Help & Support', ''),
-              _menuTile(Icons.info_outline_rounded, 'About HeritageOS', 'v1.0.0'),
+              _menuTile(Icons.info_outline_rounded, 'About HeritageOS', 'v1.0.0 Demo'),
 
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await ref.read(authNotifierProvider.notifier).signOut();
+                    if (!context.mounted) return;
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => const HomeScreen()),
+                    );
+                  },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Color(0xFFE53935)),
                     padding: const EdgeInsets.symmetric(vertical: 16),

@@ -15,25 +15,25 @@ class _QuizScreenState extends State<QuizScreen> {
 
   final _questions = const [
     _QuizQ(
-        question: 'Which civilization built the Pyramids of Giza?',
-        options: ['Roman Empire', 'Ancient Egypt', 'Greek City-States', 'Mesopotamia'],
+        question: 'In which year was the Battle of Adwa fought?',
+        options: ['1889', '1896', '1936', '1941'],
         correct: 1),
     _QuizQ(
-        question: 'In which year was the Rosetta Stone discovered?',
-        options: ['1799', '1802', '1822', '1900'],
+        question: 'Who led Ethiopian forces at the Battle of Adwa?',
+        options: ['Haile Selassie', 'Tewodros II', 'Menelik II', 'Yohannes IV'],
+        correct: 2),
+    _QuizQ(
+        question: 'Lucy (Dinkinesh) was discovered in which Ethiopian region?',
+        options: ['Oromia', 'Afar', 'Tigray', 'Amhara'],
+        correct: 1),
+    _QuizQ(
+        question: 'The rock-hewn churches of Lalibela were built under which king?',
+        options: ['Ezana', 'Fasilides', 'Lalibela', 'Menelik II'],
+        correct: 2),
+    _QuizQ(
+        question: 'Axum was the capital of which ancient empire?',
+        options: ['Aksumite', 'Zagwe', 'Solomonic', 'Ottoman'],
         correct: 0),
-    _QuizQ(
-        question: 'What material is the Rosetta Stone made of?',
-        options: ['Marble', 'Limestone', 'Granodiorite', 'Basalt'],
-        correct: 2),
-    _QuizQ(
-        question: 'Who deciphered Egyptian hieroglyphs?',
-        options: ['Herodotus', 'Napoleon', 'Champollion', 'Cleopatra'],
-        correct: 2),
-    _QuizQ(
-        question: 'Which museum houses the Rosetta Stone?',
-        options: ['The Louvre', 'British Museum', 'Met Museum', 'Egyptian Museum'],
-        correct: 1),
   ];
 
   void _answer(int idx) {

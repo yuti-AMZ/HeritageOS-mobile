@@ -8,18 +8,18 @@ class TicketsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final tickets = const [
       _Ticket(
-          title: 'Metropolitan Museum',
-          date: 'Aug 15, 2026',
-          time: '10:00 AM',
+          title: 'Adwa Victory Memorial',
+          date: 'Mar 1, 2026',
+          time: '9:00 AM',
           type: 'General Admission',
-          code: 'MET-2026-8A3F',
+          code: 'ADWA-2026-8A3F',
           status: 'Confirmed'),
       _Ticket(
-          title: 'National Gallery',
-          date: 'Aug 22, 2026',
-          time: '7:00 PM',
-          type: 'Evening Pass',
-          code: 'NAT-2026-9B2D',
+          title: 'Lalibela Rock Churches',
+          date: 'Sep 12, 2026',
+          time: '7:00 AM',
+          type: 'Pilgrim Pass',
+          code: 'LALI-2026-9B2D',
           status: 'Confirmed'),
     ];
 

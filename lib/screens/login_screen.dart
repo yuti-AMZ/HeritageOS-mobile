@@ -1,21 +1,125 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_strings.dart';
-import '../widgets/status_bar.dart';
+import '../providers/auth_provider.dart';
 import 'home_screen.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isLogin = true;
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    setState(() => _errorMessage = null);
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final name = _nameController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() => _errorMessage = 'Please fill in all fields');
+      return;
+    }
+
+    if (!_isLogin && name.isEmpty) {
+      setState(() => _errorMessage = 'Please enter your name');
+      return;
+    }
+
+    if (password.length < 6) {
+      setState(() => _errorMessage = 'Password must be at least 6 characters');
+      return;
+    }
+
+    try {
+      if (_isLogin) {
+        await ref.read(authNotifierProvider.notifier).signIn(email, password);
+      } else {
+        await ref.read(authNotifierProvider.notifier).signUp(email, password, name);
+      }
+
+      if (!mounted) return;
+
+      final authState = ref.read(authNotifierProvider);
+      if (authState.hasError) {
+        setState(() => _errorMessage = _getErrorMessage(authState.error.toString()));
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    } catch (e) {
+      setState(() => _errorMessage = _getErrorMessage(e.toString()));
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    setState(() => _errorMessage = null);
+    try {
+      await ref.read(authNotifierProvider.notifier).signInWithGoogle();
+      if (!mounted) return;
+
+      final authState = ref.read(authNotifierProvider);
+      if (authState.hasError) {
+        setState(() => _errorMessage = _getErrorMessage(authState.error.toString()));
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    } catch (e) {
+      setState(() => _errorMessage = _getErrorMessage(e.toString()));
+    }
+  }
+
+  Future<void> _resetPassword() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
+      setState(() => _errorMessage = 'Please enter your email address');
+      return;
+    }
+    try {
+      await ref.read(authNotifierProvider.notifier).resetPassword(email);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password reset email sent')),
+      );
+    } catch (e) {
+      setState(() => _errorMessage = _getErrorMessage(e.toString()));
+    }
+  }
+
+  String _getErrorMessage(String error) {
+    if (error.contains('user-not-found')) return 'No account found with this email';
+    if (error.contains('wrong-password')) return 'Incorrect password';
+    if (error.contains('email-already-in-use')) return 'An account already exists with this email';
+    if (error.contains('invalid-email')) return 'Invalid email address';
+    if (error.contains('weak-password')) return 'Password is too weak';
+    return 'An error occurred. Please try again.';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authNotifierProvider);
+    final isLoading = authState.isLoading;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -24,7 +128,6 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               const SizedBox(height: 30),
-              // Logo
               Container(
                 width: 64,
                 height: 64,
@@ -45,10 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
               Text(AppStrings.subtitle,
                   style: TextStyle(
                       fontSize: 14, color: AppColors.green.withOpacity(0.44))),
-
               const SizedBox(height: 28),
 
-              // Tab toggle
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
@@ -70,23 +171,59 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 24),
 
-              // Form fields
+              if (_errorMessage != null) ...[
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.red.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.error_outline, color: Colors.red.shade700, size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _errorMessage!,
+                          style: TextStyle(color: Colors.red.shade700, fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
               if (!_isLogin) ...[
-                _InputField(label: 'FULL NAME', hint: 'Sarah Chen'),
+                _InputField(
+                  label: 'FULL NAME',
+                  hint: 'Hanna Bekele',
+                  controller: _nameController,
+                ),
                 const SizedBox(height: 12),
               ],
-              _InputField(label: 'EMAIL ADDRESS', hint: 'sarah@example.com'),
+              _InputField(
+                label: 'EMAIL ADDRESS',
+                hint: 'sarah@example.com',
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+              ),
               const SizedBox(height: 12),
-              _InputField(label: 'PASSWORD', hint: '••••••••', obscure: true),
+              _InputField(
+                label: 'PASSWORD',
+                hint: '••••••••',
+                obscure: true,
+                controller: _passwordController,
+              ),
 
               if (_isLogin) ...[
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: _resetPassword,
                     child: Text(AppStrings.forgotPassword,
                         style: TextStyle(
                             fontSize: 12,
@@ -95,17 +232,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ],
-
               const SizedBox(height: 12),
 
-              // Submit button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HomeScreen()),
-                  ),
+                  onPressed: isLoading ? null : _submit,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.green,
                     foregroundColor: Colors.white,
@@ -114,17 +246,24 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(18)),
                     elevation: 0,
                   ),
-                  child: Text(
-                    _isLogin ? AppStrings.signIn : AppStrings.createAccount,
-                    style:
-                        const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  child: isLoading
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.5,
+                          ),
+                        )
+                      : Text(
+                          _isLogin ? AppStrings.signIn : AppStrings.createAccount,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
                 ),
               ),
-
               const SizedBox(height: 20),
 
-              // Divider
               Row(
                 children: [
                   const Expanded(child: Divider(color: Color(0x121E3A2F))),
@@ -139,15 +278,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Expanded(child: Divider(color: Color(0x121E3A2F))),
                 ],
               ),
-
               const SizedBox(height: 20),
 
-              // Social buttons
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: isLoading ? null : _signInWithGoogle,
                       icon: const Text('G',
                           style: TextStyle(
                               fontSize: 18,
@@ -170,7 +307,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: null,
                       icon: const Icon(Icons.apple, color: AppColors.green, size: 22),
                       label: const Text('Apple',
                           style: TextStyle(
@@ -234,9 +371,16 @@ class _InputField extends StatelessWidget {
   final String label;
   final String hint;
   final bool obscure;
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
 
-  const _InputField(
-      {required this.label, required this.hint, this.obscure = false});
+  const _InputField({
+    required this.label,
+    required this.hint,
+    this.obscure = false,
+    this.controller,
+    this.keyboardType,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -251,7 +395,9 @@ class _InputField extends StatelessWidget {
                 color: AppColors.green.withOpacity(0.44))),
         const SizedBox(height: 6),
         TextField(
+          controller: controller,
           obscureText: obscure,
+          keyboardType: keyboardType,
           style: const TextStyle(fontSize: 14, color: AppColors.green),
           decoration: InputDecoration(
             hintText: hint,

@@ -1,11 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_strings.dart';
+import '../providers/auth_provider.dart';
 import 'onboarding_screen.dart';
-import 'login_screen.dart';
+import 'home_screen.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends ConsumerState<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _initApp();
+  }
+
+  Future<void> _initApp() async {
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+
+    try {
+      final authState = ref.read(authStateProvider);
+      final user = authState.value;
+
+      if (!mounted) return;
+
+      if (user != null) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +57,6 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             children: [
               const Spacer(flex: 2),
-
-              // Logo
               Container(
                 width: 100,
                 height: 100,
@@ -38,8 +76,6 @@ class SplashScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 28),
-
-              // Title
               const Text(
                 'HeritageOS',
                 style: TextStyle(
@@ -50,8 +86,6 @@ class SplashScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-
-              // Subtitle
               Text(
                 AppStrings.tagline,
                 style: TextStyle(
@@ -61,8 +95,6 @@ class SplashScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 28),
-
-              // Feature tags
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -74,59 +106,13 @@ class SplashScreen extends StatelessWidget {
                   _Tag(icon: '🎙️', label: 'AI Guide'),
                 ],
               ),
-
               const Spacer(flex: 3),
-
-              // Get Started button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                          builder: (_) => const OnboardingScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.gold,
-                    foregroundColor: AppColors.green,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18)),
-                    elevation: 6,
-                  ),
-                  child: const Text(
-                    AppStrings.getStarted,
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 14),
-
-              // Login button
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                          builder: (_) => const LoginScreen()),
-                    );
-                  },
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: BorderSide(color: Colors.white.withOpacity(0.18)),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18)),
-                    backgroundColor: Colors.white.withOpacity(0.1),
-                  ),
-                  child: const Text(
-                    AppStrings.alreadyHaveAccount,
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                  ),
+              const SizedBox(
+                width: 40,
+                height: 40,
+                child: CircularProgressIndicator(
+                  color: AppColors.gold,
+                  strokeWidth: 3,
                 ),
               ),
             ],

@@ -9,6 +9,7 @@ import 'heritage_place_timeline_screen.dart';
 import 'heritage_place_nearby_screen.dart';
 import 'heritage_place_activities_screen.dart';
 import 'heritage_place_reviews_screen.dart';
+import 'qr_screen.dart';
 
 class HeritagePlaceScreen extends StatefulWidget {
   final HeritagePlace place;
@@ -121,7 +122,10 @@ class _HeritagePlaceScreenState extends State<HeritagePlaceScreen>
               child: Row(
                 children: [
                   _quickAction(Icons.map_rounded, 'Map', () {}),
-                  _quickAction(Icons.qr_code_scanner, 'Scan', () {}),
+                  _quickAction(Icons.qr_code_scanner, 'Scan', () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const QRScreen()));
+                  }),
                   _quickAction(Icons.headphones_rounded, 'Audio', () {
                     Navigator.push(context, MaterialPageRoute(
                         builder: (_) => HeritagePlaceAudioGuideScreen(place: place)));

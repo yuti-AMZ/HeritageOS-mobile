@@ -30,7 +30,7 @@ class MapScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   const Expanded(
-                    child: Text('Explore Map',
+                    child: Text('Explore Ethiopia',
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -91,27 +91,27 @@ class MapScreen extends StatelessWidget {
                                   width: 0.6,
                                   color: AppColors.green.withOpacity(0.12)))),
 
-                      // Map pins
+                      // Map pins — Addis Ababa focus
                       Positioned(
                           top: 72,
                           left: 80,
-                          child: _pin('Louvre')),
+                          child: _pin('Adwa')),
                       Positioned(
                           top: 180,
                           left: 180,
-                          child: _pin('Acropolis')),
+                          child: _pin('NME')),
                       Positioned(
                           top: 140,
                           left: 220,
-                          child: _pin('Museum')),
+                          child: _pin('Lucy')),
                       Positioned(
                           top: 250,
                           left: 90,
-                          child: _pin('Gallery')),
+                          child: _pin('Entoto')),
                       Positioned(
                           top: 220,
                           left: 140,
-                          child: _pin('Park')),
+                          child: _pin('Red Terror')),
 
                       // Center button
                       Positioned(
@@ -173,9 +173,9 @@ class MapScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: AppColors.gold)),
                   const SizedBox(height: 12),
-                  _nearbyItem('The Louvre', '0.3 km away', Icons.museum_rounded),
-                  _nearbyItem('Musée d\'Orsay', '0.8 km away', Icons.art_track_rounded),
-                  _nearbyItem('Notre-Dame', '1.2 km away', Icons.account_balance_rounded),
+                  _nearbyItem('Adwa Victory Memorial', '1.2 km away', Icons.museum_rounded),
+                  _nearbyItem('National Museum (Lucy)', '2.1 km away', Icons.pets_rounded),
+                  _nearbyItem('Holy Trinity Cathedral', '3.4 km away', Icons.account_balance_rounded),
                 ],
               ),
             ),

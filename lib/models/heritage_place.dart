@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class HeritagePlace {
   final String id;
   final String name;
@@ -40,6 +42,55 @@ class HeritagePlace {
     this.exhibits = const [],
     this.timeline = const [],
   });
+
+  factory HeritagePlace.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return HeritagePlace(
+      id: doc.id,
+      name: data['name'] ?? '',
+      country: data['country'] ?? '',
+      city: data['city'] ?? '',
+      category: data['category'] ?? '',
+      description: data['description'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
+      videoUrl: data['videoUrl'],
+      rating: (data['rating'] ?? 0).toDouble(),
+      reviewCount: data['reviewCount'] ?? 0,
+      openingHours: data['openingHours'] ?? '',
+      ticketInfo: data['ticketInfo'] ?? '',
+      contact: data['contact'] ?? '',
+      latitude: (data['latitude'] ?? 0).toDouble(),
+      longitude: (data['longitude'] ?? 0).toDouble(),
+      photos: List<String>.from(data['photos'] ?? []),
+      isFeatured: data['isFeatured'] ?? false,
+      timeline: (data['timeline'] as List<dynamic>?)
+              ?.map((e) => TimelineEvent.fromMap(e))
+              .toList() ??
+          [],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'country': country,
+      'city': city,
+      'category': category,
+      'description': description,
+      'imageUrl': imageUrl,
+      'videoUrl': videoUrl,
+      'rating': rating,
+      'reviewCount': reviewCount,
+      'openingHours': openingHours,
+      'ticketInfo': ticketInfo,
+      'contact': contact,
+      'latitude': latitude,
+      'longitude': longitude,
+      'photos': photos,
+      'isFeatured': isFeatured,
+      'timeline': timeline.map((e) => e.toMap()).toList(),
+    };
+  }
 }
 
 class Exhibit {
@@ -62,6 +113,32 @@ class Exhibit {
     this.qrCode,
     this.relatedExhibits = const [],
   });
+
+  factory Exhibit.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Exhibit(
+      id: doc.id,
+      name: data['name'] ?? '',
+      description: data['description'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
+      category: data['category'] ?? '',
+      audioUrl: data['audioUrl'],
+      qrCode: data['qrCode'],
+      relatedExhibits: List<String>.from(data['relatedExhibits'] ?? []),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'description': description,
+      'imageUrl': imageUrl,
+      'category': category,
+      'audioUrl': audioUrl,
+      'qrCode': qrCode,
+      'relatedExhibits': relatedExhibits,
+    };
+  }
 }
 
 class TimelineEvent {
@@ -76,91 +153,43 @@ class TimelineEvent {
     required this.description,
     this.imageUrl,
   });
+
+  factory TimelineEvent.fromMap(Map<String, dynamic> map) {
+    return TimelineEvent(
+      year: map['year'] ?? '',
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      imageUrl: map['imageUrl'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'year': year,
+      'title': title,
+      'description': description,
+      'imageUrl': imageUrl,
+    };
+  }
 }
 
-class AudioTrack {
-  final String id;
-  final String title;
-  final String language;
-  final Duration duration;
-  final String? url;
-  final bool isDetailed;
-
-  const AudioTrack({
-    required this.id,
-    required this.title,
-    required this.language,
-    required this.duration,
-    this.url,
-    this.isDetailed = false,
-  });
-}
-
-class Review {
+class MockReview {
   final String id;
   final String userName;
   final String userAvatar;
   final double rating;
   final String text;
   final DateTime date;
-  final List<String> photos;
   final String? tip;
 
-  const Review({
+  const MockReview({
     required this.id,
     required this.userName,
     required this.userAvatar,
     required this.rating,
     required this.text,
     required this.date,
-    this.photos = const [],
     this.tip,
-  });
-}
-
-class TourPreference {
-  final int durationMinutes;
-  final List<String> interests;
-  final String? heritagePlaceId;
-
-  const TourPreference({
-    required this.durationMinutes,
-    required this.interests,
-    this.heritagePlaceId,
-  });
-}
-
-class SavedPlace {
-  final String placeId;
-  final String placeName;
-  final String imageUrl;
-  final DateTime savedAt;
-  final bool isFavorite;
-
-  const SavedPlace({
-    required this.placeId,
-    required this.placeName,
-    required this.imageUrl,
-    required this.savedAt,
-    this.isFavorite = true,
-  });
-}
-
-class VisitorActivity {
-  final String id;
-  final String type;
-  final String title;
-  final String description;
-  final int points;
-  final bool isCompleted;
-
-  const VisitorActivity({
-    required this.id,
-    required this.type,
-    required this.title,
-    required this.description,
-    required this.points,
-    this.isCompleted = false,
   });
 }
 

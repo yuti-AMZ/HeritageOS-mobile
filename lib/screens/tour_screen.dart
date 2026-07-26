@@ -60,15 +60,15 @@ class TourScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('EGYPTIAN ANTIQUITIES',
+                    Text('ADDIS ABABA HERITAGE',
                         style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             color: AppColors.gold)),
                     SizedBox(height: 4),
-                    Text('Tour of the Met',
+                    Text('Adwa & National Museum',
                         style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 22,
                             fontWeight: FontWeight.w900,
                             color: Colors.white)),
                   ],
@@ -101,7 +101,7 @@ class TourScreen extends StatelessWidget {
                           color: AppColors.green)),
                   const SizedBox(height: 8),
                   Text(
-                    'Explore the Met\'s world-renowned Egyptian collection with an AI-powered guide. From the Temple of Dendur to the iconicRosetta Stone replica, this tour covers 3,000 years of ancient Egyptian civilization.',
+                    'Walk through Addis Ababa\'s living history — from the Adwa Victory Memorial to Lucy at the National Museum. Your AI guide narrates Ethiopia\'s story of sovereignty, faith, and human origins.',
                     style: TextStyle(
                         fontSize: 14,
                         height: 1.6,
@@ -202,13 +202,13 @@ class TourScreen extends StatelessWidget {
   }
 
   static const _highlights = [
-    (Icons.account_balance_rounded, 'Temple of Dendur',
-        'Ancient Egyptian temple gifted by Egypt to the US'),
-    (Icons.history_edu_rounded, 'Rosetta Stone Replica',
-        'See the key to deciphering hieroglyphs'),
-    (Icons.museum_rounded, 'King Tut\'s Mask',
-        'Iconic gold burial mask of Tutankhamun'),
-    (Icons.landscape_rounded, 'Mummy Chamber',
-        'Explore 3,000-year-old preserved remains'),
+    (Icons.military_tech_rounded, 'Battle of Adwa Diorama',
+        'Relive March 1, 1896 and Ethiopia\'s victory'),
+    (Icons.pets_rounded, 'Lucy (Dinkinesh)',
+        'Meet the 3.2-million-year-old fossil that changed science'),
+    (Icons.account_balance_rounded, 'Imperial Crowns',
+        'Regalia from Ethiopia\'s Solomonic emperors'),
+    (Icons.auto_stories_rounded, 'Orthodox Icons',
+        'Sacred art from centuries of Ethiopian Christianity'),
   ];
 }

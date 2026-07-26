@@ -9,7 +9,7 @@ class MockData {
       city: 'Addis Ababa',
       category: 'Museum',
       description:
-          'The Adwa Victory Memorial Museum commemorates the historic Battle of Adwa (1896), where Ethiopian forces decisively defeated Italian colonial troops, preserving Ethiopia\'s sovereignty and inspiring African independence movements worldwide.',
+          'The Adwa Victory Memorial Museum commemorates the Battle of Adwa (1896), where Ethiopian forces defeated Italian colonial troops, preserving Ethiopia\'s sovereignty and inspiring African independence movements worldwide.',
       imageUrl:
           'https://images.unsplash.com/photo-1572905421176-6fa2f11a236e?w=800&h=500&fit=crop',
       rating: 4.8,
@@ -30,7 +30,7 @@ class MockData {
           id: 'e1',
           name: 'Battle of Adwa Diorama',
           description:
-              'A detailed miniature reconstruction of the Battle of Adwa, showing troop positions and the decisive moment of Ethiopian victory.',
+              'A detailed miniature reconstruction of the Battle of Adwa, showing troop positions and the decisive moment of Ethiopian victory on March 1, 1896.',
           imageUrl:
               'https://images.unsplash.com/photo-1572905421176-6fa2f11a236e?w=400&h=300&fit=crop',
           category: 'Historical',
@@ -41,7 +41,7 @@ class MockData {
           id: 'e2',
           name: 'Emperor Menelik II Portrait Gallery',
           description:
-              'Original portraits and photographs of Emperor Menelik II and Empress Taytu Betul, the leaders who orchestrated the defense of Ethiopian sovereignty.',
+              'Portraits and photographs of Emperor Menelik II and Empress Taytu Betul, who led the defense of Ethiopian sovereignty.',
           imageUrl:
               'https://images.unsplash.com/photo-1590846083693-f23fdede3a7e?w=400&h=300&fit=crop',
           category: 'Art',
@@ -52,7 +52,7 @@ class MockData {
           id: 'e3',
           name: 'Weapons & Armor Collection',
           description:
-              'Authentic Ethiopian weapons, shields, and armor used during the Battle of Adwa, alongside captured Italian equipment.',
+              'Ethiopian spears, shields, and swords used at Adwa, displayed alongside captured Italian equipment.',
           imageUrl:
               'https://images.unsplash.com/photo-1580130775562-0ef92da028de?w=400&h=300&fit=crop',
           category: 'Artifacts',
@@ -63,7 +63,7 @@ class MockData {
           id: 'e4',
           name: 'Treaty of Wuchale Display',
           description:
-              'The original and translated versions of the Treaty of Wuchale, whose disputed article led to the conflict.',
+              'Original and translated versions of the Treaty of Wuchale, whose disputed Article 17 sparked the conflict.',
           imageUrl:
               'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&h=300&fit=crop',
           category: 'Documents',
@@ -71,9 +71,9 @@ class MockData {
         ),
         Exhibit(
           id: 'e5',
-          name: 'Voices of Adwa - Oral History',
+          name: 'Voices of Adwa — Oral History',
           description:
-              'Audio recordings and transcripts of oral histories passed down through generations about the Battle of Adwa.',
+              'Audio recordings and transcripts of oral histories about Adwa passed down through generations.',
           imageUrl:
               'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400&h=300&fit=crop',
           category: 'Audio',
@@ -91,302 +91,403 @@ class MockData {
             year: '1895',
             title: 'Italian Invasion Begins',
             description:
-                'Italian forces launch their campaign to colonize Ethiopia, advancing from Eritrea.'),
+                'Italian forces advance from Eritrea in a campaign to colonize Ethiopia.'),
         TimelineEvent(
             year: 'Mar 1, 1896',
             title: 'Battle of Adwa',
             description:
-                'Ethiopian forces under Emperor Menelik II defeat the Italian army in a decisive battle lasting several hours.'),
+                'Ethiopian forces under Emperor Menelik II defeat the Italian army in a decisive battle.'),
         TimelineEvent(
             year: '1896',
             title: 'Treaty of Addis Ababa',
             description:
                 'Italy recognizes Ethiopia\'s full sovereignty, ending the First Italo-Ethiopian War.'),
         TimelineEvent(
-            year: '1936',
-            title: 'Italian Occupation',
-            description:
-                'Italy occupies Ethiopia during the Second Italo-Ethiopian War, but resistance continues.'),
-        TimelineEvent(
             year: '1941',
             title: 'Liberation',
             description:
-                'Ethiopian forces, with British support, liberate the country from Italian occupation.'),
+                'Ethiopia is liberated from Italian occupation with the return of Emperor Haile Selassie.'),
         TimelineEvent(
             year: '2024',
             title: 'Memorial Museum Opens',
             description:
-                'The Adwa Victory Memorial Museum opens, preserving the legacy of Ethiopian resistance for future generations.'),
-        TimelineEvent(
-            year: 'Today',
-            title: 'Living Heritage',
-            description:
-                'The museum serves as a symbol of African independence and a source of national pride.'),
-        TimelineEvent(
-            year: 'Today',
-            title: 'Living Heritage',
-            description:
-                'The museum serves as a symbol of African independence and a source of national pride.'),
-        TimelineEvent(
-            year: 'Today',
-            title: 'Living Heritage',
-            description:
-                'The museum serves as a symbol of African independence and a source of national pride.'),
+                'The Adwa Victory Memorial Museum opens in Addis Ababa.'),
       ],
     ),
     HeritagePlace(
       id: '2',
-      name: 'The Louvre',
-      country: 'France',
-      city: 'Paris',
+      name: 'National Museum of Ethiopia',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
       category: 'Museum',
       description:
-          'The world\'s largest art museum and home to thousands of works including the Mona Lisa and Venus de Milo.',
+          'Home to Lucy (Dinkinesh) and one of Africa\'s richest archaeological collections — from prehistoric fossils to imperial crowns and Ethiopian Orthodox art.',
       imageUrl:
-          'https://images.unsplash.com/photo-1770713522187-d9c16e16a15b?w=800&h=500&fit=crop',
-      rating: 4.9,
-      reviewCount: 15420,
-      openingHours: '9:00 AM - 6:00 PM (Closed Tuesdays)',
-      ticketInfo: 'Adults: €22 | Under 18: Free | EU Residents: Free',
-      contact: '+33 1 40 20 53 17',
-      latitude: 48.8606,
-      longitude: 2.3376,
+          'https://images.unsplash.com/photo-1566127444979-b20d8ce2484a?w=800&h=500&fit=crop',
+      rating: 4.7,
+      reviewCount: 2180,
+      openingHours: '8:30 AM - 5:30 PM (Tue-Sun)',
+      ticketInfo: 'Adults: 100 ETB | Students: 50 ETB | Foreigners: 200 ETB',
+      contact: '+251 11 111 7150',
+      latitude: 9.0384,
+      longitude: 38.7612,
       isFeatured: true,
       exhibits: [
         Exhibit(
-          id: 'l1',
-          name: 'Mona Lisa',
+          id: 'n1',
+          name: 'Lucy (Dinkinesh)',
           description:
-              'Leonardo da Vinci\'s masterpiece, painted between 1503-1519. The most famous portrait in the world.',
+              'The 3.2-million-year-old Australopithecus afarensis fossil discovered in Hadar in 1974 — one of the most important finds in human origins research.',
           imageUrl:
-              'https://images.unsplash.com/photo-1770713522187-d9c16e16a15b?w=400&h=300&fit=crop',
-          category: 'Painting',
-          qrCode: 'LOUVRE-MONALISA-001',
+              'https://images.unsplash.com/photo-1566127444979-b20d8ce2484a?w=400&h=300&fit=crop',
+          category: 'Paleontology',
+          qrCode: 'NME-LUCY-001',
         ),
         Exhibit(
-          id: 'l2',
-          name: 'Venus de Milo',
+          id: 'n2',
+          name: 'Imperial Crowns & Regalia',
           description:
-              'Ancient Greek sculpture created between 130-100 BC, one of the most famous works of ancient Greek sculpture.',
+              'Crowns, robes, and ceremonial objects from Ethiopian emperors, including pieces linked to Haile Selassie\'s court.',
           imageUrl:
-              'https://images.unsplash.com/photo-1772617616268-a2f27d194fce?w=400&h=300&fit=crop',
-          category: 'Sculpture',
-          qrCode: 'LOUVRE-VENUS-002',
+              'https://images.unsplash.com/photo-1590846083693-f23fdede3a7e?w=400&h=300&fit=crop',
+          category: 'Royal Collection',
+          qrCode: 'NME-CROWNS-002',
         ),
         Exhibit(
-          id: 'l3',
-          name: 'Winged Victory of Samothrace',
+          id: 'n3',
+          name: 'Ethiopian Orthodox Icons',
           description:
-              'Hellenistic sculpture of the Greek goddess Nike, dated to approximately 190 BC.',
+              'Hand-painted icons and manuscript illuminations reflecting centuries of Ethiopian Christian tradition.',
           imageUrl:
-              'https://images.unsplash.com/photo-1771456294161-7d09c625cf96?w=400&h=300&fit=crop',
-          category: 'Sculpture',
-          qrCode: 'LOUVRE-NIKE-003',
+              'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400&h=300&fit=crop',
+          category: 'Sacred Art',
+          qrCode: 'NME-ICONS-003',
         ),
       ],
       timeline: [
         TimelineEvent(
-            year: '1793',
-            title: 'Museum Opens',
+            year: '1974',
+            title: 'Lucy Discovered',
             description:
-                'The Louvre opens as a public museum during the French Revolution.'),
-        TimelineEvent(
-            year: '1804',
-            title: 'Napoleon\'s Expansion',
-            description:
-                'Napoleon significantly expands the museum\'s collection.'),
-        TimelineEvent(
-            year: '1989',
-            title: 'Glass Pyramid',
-            description:
-                'I.M. Pei\'s glass pyramid entrance is completed.'),
+                'Donald Johanson\'s team finds Lucy (Dinkinesh) in the Afar region.'),
         TimelineEvent(
             year: 'Today',
-            title: 'World\'s Largest Museum',
+            title: 'National Treasure',
             description:
-                'Over 380,000 objects and 35,000 works on display.'),
+                'The museum remains Ethiopia\'s primary home for paleontology and imperial heritage.'),
       ],
     ),
     HeritagePlace(
       id: '3',
-      name: 'British Museum',
-      country: 'United Kingdom',
-      city: 'London',
-      category: 'Museum',
+      name: 'Rock-Hewn Churches of Lalibela',
+      country: 'Ethiopia',
+      city: 'Lalibela',
+      category: 'Archaeological Site',
       description:
-          'A public museum dedicated to human history, art, and culture, with a collection of some eight million works.',
+          'Eleven medieval monolithic churches carved from living rock in the 12th–13th centuries — a UNESCO World Heritage Site and living place of Orthodox pilgrimage.',
       imageUrl:
-          'https://images.unsplash.com/photo-1782466357373-515da25d313e?w=800&h=500&fit=crop',
-      rating: 4.8,
-      reviewCount: 12300,
-      openingHours: '10:00 AM - 5:00 PM (Daily)',
-      ticketInfo: 'Free admission | Special exhibitions may charge',
-      contact: '+44 20 7323 8299',
-      latitude: 51.5194,
-      longitude: -0.1270,
+          'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&h=500&fit=crop',
+      rating: 4.9,
+      reviewCount: 5640,
+      openingHours: '6:00 AM - 6:00 PM (Daily)',
+      ticketInfo: 'Foreigners: 50 USD | Ethiopians: 100 ETB | Students: Discounted',
+      contact: '+251 33 336 0047',
+      latitude: 12.0310,
+      longitude: 39.0476,
       isFeatured: true,
       exhibits: [
         Exhibit(
-          id: 'b1',
-          name: 'Rosetta Stone',
+          id: 'lb1',
+          name: 'Bete Giyorgis (St. George)',
           description:
-              'Granodiorite stele inscribed with three versions of a decree issued in Memphis, Egypt in 196 BCE.',
+              'The iconic cross-shaped church carved from a single rock — the masterpiece of Lalibela.',
           imageUrl:
-              'https://images.unsplash.com/photo-1782466357373-515da25d313e?w=400&h=300&fit=crop',
-          category: 'Artifact',
-          qrCode: 'BRITISH-ROSETTA-001',
+              'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=300&fit=crop',
+          category: 'Church',
+          qrCode: 'LALIBELA-GIYORGIS-001',
         ),
         Exhibit(
-          id: 'b2',
-          name: 'Egyptian Mummies',
+          id: 'lb2',
+          name: 'Bete Medhane Alem',
           description:
-              'The museum houses one of the finest collections of mummies and coffins outside of Egypt.',
+              'Said to be the world\'s largest monolithic church, dedicated to the Saviour of the World.',
           imageUrl:
-              'https://images.unsplash.com/photo-1580130775562-0ef92da028de?w=400&h=300&fit=crop',
-          category: 'Artifact',
-          qrCode: 'BRITISH-MUMMIES-002',
+              'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=300&fit=crop',
+          category: 'Church',
+          qrCode: 'LALIBELA-MEDHANE-002',
+        ),
+        Exhibit(
+          id: 'lb3',
+          name: 'Pilgrimage Tunnels',
+          description:
+              'A network of trenches and tunnels connecting the churches, still walked by pilgrims today.',
+          imageUrl:
+              'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=300&fit=crop',
+          category: 'Architecture',
+          qrCode: 'LALIBELA-TUNNELS-003',
         ),
       ],
       timeline: [
         TimelineEvent(
-            year: '1753',
-            title: 'Museum Founded',
+            year: 'c. 1181–1221',
+            title: 'King Lalibela',
             description:
-                'Sir Hans Sloane donates his collection to the nation.'),
+                'Zagwe King Gebre Meskel Lalibela commissions the rock churches as a "New Jerusalem".'),
         TimelineEvent(
-            year: '1759',
-            title: 'Doors Open',
+            year: '1978',
+            title: 'UNESCO Listing',
             description:
-                'The British Museum opens to the public in Montagu House.'),
-        TimelineEvent(
-            year: 'Today',
-            title: 'Global Collection',
-            description:
-                'Over 8 million objects spanning two million years of human history.'),
+                'The Rock-Hewn Churches of Lalibela are inscribed as a World Heritage Site.'),
       ],
     ),
     HeritagePlace(
       id: '4',
-      name: 'Acropolis of Athens',
-      country: 'Greece',
-      city: 'Athens',
+      name: 'Axum Obelisks & Archaeological Site',
+      country: 'Ethiopia',
+      city: 'Axum',
       category: 'Archaeological Site',
       description:
-          'An ancient citadel on a rocky outcrop above Athens, containing the remains of several ancient buildings including the Parthenon.',
+          'Capital of the ancient Aksumite Empire — towering stelae, royal tombs, and the claimed resting place of the Ark of the Covenant at the Church of Our Lady Mary of Zion.',
       imageUrl:
-          'https://images.unsplash.com/photo-1566927244565-9a96a147a998?w=800&h=500&fit=crop',
-      rating: 4.9,
-      reviewCount: 8900,
-      openingHours: '8:00 AM - 8:00 PM (Summer) | 8:00 AM - 5:00 PM (Winter)',
-      ticketInfo: 'Combined ticket: €30 | Valid for multiple sites',
-      contact: '+30 21 0321 4172',
-      latitude: 37.9715,
-      longitude: 23.7267,
+          'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800&h=500&fit=crop',
+      rating: 4.8,
+      reviewCount: 3120,
+      openingHours: '8:00 AM - 5:30 PM (Daily)',
+      ticketInfo: 'Adults: 200 ETB | Foreigners: 50 USD combined sites',
+      contact: '+251 34 775 1234',
+      latitude: 14.1324,
+      longitude: 38.7168,
       isFeatured: true,
+      exhibits: [
+        Exhibit(
+          id: 'ax1',
+          name: 'Great Stele of Axum',
+          description:
+              'One of the world\'s tallest ancient monoliths — a granite marker of Aksumite royal power.',
+          imageUrl:
+              'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=300&fit=crop',
+          category: 'Monument',
+          qrCode: 'AXUM-STELE-001',
+        ),
+        Exhibit(
+          id: 'ax2',
+          name: 'King Ezana\'s Stele',
+          description:
+              'Inscribed stele linked to King Ezana, who adopted Christianity in the 4th century.',
+          imageUrl:
+              'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=300&fit=crop',
+          category: 'Monument',
+          qrCode: 'AXUM-EZANA-002',
+        ),
+        Exhibit(
+          id: 'ax3',
+          name: 'Church of Mary of Zion',
+          description:
+              'Ethiopia\'s most sacred church complex — tradition holds the Ark of the Covenant is kept here.',
+          imageUrl:
+              'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&h=300&fit=crop',
+          category: 'Sacred Site',
+          qrCode: 'AXUM-ZION-003',
+        ),
+      ],
+      timeline: [
+        TimelineEvent(
+            year: '1st–7th c.',
+            title: 'Aksumite Empire',
+            description:
+                'Axum thrives as a major Red Sea trading power linking Africa, Arabia, and the Mediterranean.'),
+        TimelineEvent(
+            year: 'c. 330',
+            title: 'Christianization',
+            description:
+                'King Ezana converts to Christianity, making Ethiopia one of the world\'s earliest Christian states.'),
+      ],
     ),
     HeritagePlace(
       id: '5',
-      name: 'Yosemite National Park',
-      country: 'United States',
-      city: 'California',
-      category: 'Natural Heritage',
+      name: 'Fasil Ghebbi (Gondar Castles)',
+      country: 'Ethiopia',
+      city: 'Gondar',
+      category: 'Historical Monument',
       description:
-          'A protected wilderness area in California\'s Sierra Nevada mountains, known for its granite cliffs, waterfalls, and giant sequoias.',
+          'The royal enclosure of the Gondarine emperors — a UNESCO fortress-city of castles, churches, and baths that earned Gondar the name "Camelot of Africa".',
       imageUrl:
-          'https://images.unsplash.com/photo-1491590324047-588cc8277f59?w=800&h=500&fit=crop',
-      rating: 4.8,
-      reviewCount: 22000,
-      openingHours: 'Open 24 hours (Some areas seasonal)',
-      ticketInfo: 'Per vehicle: \$35 | Individual: \$20',
-      contact: '+1 209-372-0200',
-      latitude: 37.8651,
-      longitude: -119.5383,
+          'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&h=500&fit=crop',
+      rating: 4.7,
+      reviewCount: 2890,
+      openingHours: '8:00 AM - 5:00 PM (Daily)',
+      ticketInfo: 'Foreigners: 200 ETB | Ethiopians: 50 ETB',
+      contact: '+251 58 111 0022',
+      latitude: 12.6084,
+      longitude: 37.4674,
+      isFeatured: true,
+      exhibits: [
+        Exhibit(
+          id: 'g1',
+          name: 'Castle of Fasilides',
+          description:
+              'The main palace of Emperor Fasilides, founder of Gondar as Ethiopia\'s capital in the 17th century.',
+          imageUrl:
+              'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&h=300&fit=crop',
+          category: 'Palace',
+          qrCode: 'GONDAR-FASIL-001',
+        ),
+        Exhibit(
+          id: 'g2',
+          name: 'Fasilides Bath',
+          description:
+              'A pavilion and pool used for Timkat (Epiphany) celebrations — still filled with water for the festival each year.',
+          imageUrl:
+              'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=300&fit=crop',
+          category: 'Monument',
+          qrCode: 'GONDAR-BATH-002',
+        ),
+      ],
+      timeline: [
+        TimelineEvent(
+            year: '1636',
+            title: 'Capital Founded',
+            description:
+                'Emperor Fasilides establishes Gondar as the imperial capital.'),
+        TimelineEvent(
+            year: '1979',
+            title: 'UNESCO Listing',
+            description: 'Fasil Ghebbi is inscribed as a World Heritage Site.'),
+      ],
     ),
     HeritagePlace(
       id: '6',
-      name: 'Pompeii Ruins',
-      country: 'Italy',
-      city: 'Naples',
-      category: 'Archaeological Site',
+      name: 'Harar Jugol — Old Walled City',
+      country: 'Ethiopia',
+      city: 'Harar',
+      category: 'Historical Monument',
       description:
-          'An ancient Roman city buried by volcanic ash from Mount Vesuvius in 79 AD, remarkably preserved for nearly 2,000 years.',
+          'A historic Islamic city of narrow alleys, 82 mosques, and colorful houses — once a major center of trade and Islamic learning in the Horn of Africa.',
       imageUrl:
-          'https://images.unsplash.com/photo-1572905421176-6fa2f11a236e?w=800&h=500&fit=crop',
-      rating: 4.7,
-      reviewCount: 9800,
-      openingHours: '9:00 AM - 7:00 PM (Summer) | 9:00 AM - 5:00 PM (Winter)',
-      ticketInfo: 'Adults: €18 | EU 18-25: €2 | Under 18: Free',
-      contact: '+39 081 857 5329',
-      latitude: 40.7484,
-      longitude: 14.4848,
+          'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800&h=500&fit=crop',
+      rating: 4.6,
+      reviewCount: 1540,
+      openingHours: 'Open daily — gates close at night for some quarters',
+      ticketInfo: 'City tour guide: from 300 ETB | Museum: 50–100 ETB',
+      contact: '+251 25 666 1234',
+      latitude: 9.3133,
+      longitude: 42.1180,
+      isFeatured: false,
+      exhibits: [
+        Exhibit(
+          id: 'h1',
+          name: 'Jugol City Walls',
+          description:
+              'The 16th-century walls and five historic gates that protect the old city of Harar.',
+          imageUrl:
+              'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=400&h=300&fit=crop',
+          category: 'Architecture',
+          qrCode: 'HARAR-WALLS-001',
+        ),
+        Exhibit(
+          id: 'h2',
+          name: 'Hyena Feeding Tradition',
+          description:
+              'A living cultural practice where local "hyena men" feed spotted hyenas outside the city walls at dusk.',
+          imageUrl:
+              'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&h=300&fit=crop',
+          category: 'Living Culture',
+          qrCode: 'HARAR-HYENA-002',
+        ),
+      ],
+      timeline: [
+        TimelineEvent(
+            year: '16th c.',
+            title: 'Walls Built',
+            description:
+                'Harar\'s jugol walls are constructed, shaping the unique urban fabric still seen today.'),
+        TimelineEvent(
+            year: '2006',
+            title: 'UNESCO Listing',
+            description: 'Harar Jugol is inscribed as a World Heritage Site.'),
+      ],
     ),
     HeritagePlace(
       id: '7',
-      name: 'Great Wall of China',
-      country: 'China',
-      city: 'Beijing',
-      category: 'Historical Monument',
+      name: 'Simien Mountains National Park',
+      country: 'Ethiopia',
+      city: 'Debark',
+      category: 'Natural Heritage',
       description:
-          'A series of fortifications made of stone, brick, and other materials, stretching over 13,000 miles across northern China.',
+          'Dramatic highland peaks, endemic wildlife including the gelada and Ethiopian wolf, and some of Africa\'s most spectacular trekking routes.',
       imageUrl:
-          'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&h=500&fit=crop',
-      rating: 4.8,
-      reviewCount: 31000,
-      openingHours: '7:30 AM - 5:30 PM (Varies by section)',
-      ticketInfo: 'Badaling: ¥40 (Apr-Oct) | ¥35 (Nov-Mar)',
-      contact: '+86 10 6912 1422',
-      latitude: 40.4319,
-      longitude: 116.5704,
+          'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&h=500&fit=crop',
+      rating: 4.9,
+      reviewCount: 4210,
+      openingHours: 'Park open year-round (best: Oct–Mar)',
+      ticketInfo: 'Park fee: from 90 ETB/day | Scout & guide required',
+      contact: '+251 58 111 8900',
+      latitude: 13.2340,
+      longitude: 38.0410,
+      isFeatured: true,
     ),
     HeritagePlace(
       id: '8',
-      name: 'Taj Mahal',
-      country: 'India',
-      city: 'Agra',
-      category: 'Historical Monument',
+      name: 'Tiya Stelae Field',
+      country: 'Ethiopia',
+      city: 'Tiya',
+      category: 'Archaeological Site',
       description:
-          'An ivory-white marble mausoleum built by Mughal Emperor Shah Jahan in memory of his wife Mumtaz Mahal.',
+          'A UNESCO field of carved standing stones south of Addis Ababa — enigmatic markers of a little-understood ancient culture of the Soddo region.',
       imageUrl:
-          'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=500&fit=crop',
-      rating: 4.9,
-      reviewCount: 28000,
-      openingHours: '30 min before sunrise - 30 min before sunset (Closed Fridays)',
-      ticketInfo: 'Indians: ₹50 | Foreigners: ₹1100',
-      contact: '+91 562 222 7261',
-      latitude: 27.1751,
-      longitude: 78.0421,
+          'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=800&h=500&fit=crop',
+      rating: 4.5,
+      reviewCount: 680,
+      openingHours: '8:00 AM - 5:00 PM',
+      ticketInfo: 'Adults: 50 ETB | Foreigners: 100 ETB',
+      contact: '+251 11 000 0000',
+      latitude: 8.4500,
+      longitude: 38.6167,
+      isFeatured: false,
+      exhibits: [
+        Exhibit(
+          id: 't1',
+          name: 'Carved Memorial Stelae',
+          description:
+              'Dozens of engraved stones featuring swords, human figures, and symbols — believed to mark ancient burial grounds.',
+          imageUrl:
+              'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=400&h=300&fit=crop',
+          category: 'Monument',
+          qrCode: 'TIYA-STELE-001',
+        ),
+      ],
     ),
   ];
 
   static final reviews = [
-    Review(
+    MockReview(
       id: 'r1',
-      userName: 'Sarah Chen',
-      userAvatar: 'SC',
+      userName: 'Hanna Bekele',
+      userAvatar: 'HB',
       rating: 5.0,
       text:
-          'Absolutely incredible! The Adwa Victory Memorial Museum is a powerful tribute to Ethiopian resistance. The diorama of the battle is breathtaking.',
+          'The Adwa museum made me proud. The diorama and oral histories bring March 1, 1896 to life.',
       date: DateTime(2026, 7, 15),
-      tip: 'Visit in the morning for fewer crowds.',
+      tip: 'Visit in the morning — cooler and quieter.',
     ),
-    Review(
+    MockReview(
       id: 'r2',
-      userName: 'Michael Brooks',
-      userAvatar: 'MB',
+      userName: 'Yonas Tadesse',
+      userAvatar: 'YT',
       rating: 4.5,
       text:
-          'Very informative and well-curated. The AI guide feature made the experience even more engaging. Highly recommend!',
+          'Lalibela is unforgettable. Scanning Bete Giyorgis with HeritageOS and hearing the AI guide in Amharic was perfect.',
       date: DateTime(2026, 7, 10),
     ),
-    Review(
+    MockReview(
       id: 'r3',
-      userName: 'Fatima Al-Rashid',
-      userAvatar: 'FA',
+      userName: 'Sara Mohammed',
+      userAvatar: 'SM',
       rating: 5.0,
       text:
-          'A must-visit for anyone interested in African history. The museum beautifully captures the spirit of Ethiopian independence.',
+          'Seeing Lucy at the National Museum and then reading the Axum timeline — Ethiopia\'s story is incredible.',
       date: DateTime(2026, 6, 28),
-      tip: 'Allow at least 2-3 hours for a thorough visit.',
+      tip: 'Combine National Museum + Adwa Memorial in one Addis day.',
     ),
   ];
 
@@ -394,29 +495,29 @@ class MockData {
     Achievement(
       id: 'a1',
       title: 'First Steps',
-      description: 'Visit your first heritage site',
+      description: 'Visit your first Ethiopian heritage site',
       icon: '🏛️',
       isUnlocked: true,
     ),
     Achievement(
       id: 'a2',
-      title: 'Explorer',
-      description: 'Visit 5 different heritage sites',
+      title: 'Highland Explorer',
+      description: 'Visit 5 different sites across Ethiopia',
       icon: '🧭',
       isUnlocked: true,
     ),
     Achievement(
       id: 'a3',
       title: 'History Buff',
-      description: 'Complete 10 quizzes',
+      description: 'Complete 10 Ethiopian heritage quizzes',
       icon: '📚',
       isUnlocked: false,
     ),
     Achievement(
       id: 'a4',
-      title: 'Globe Trotter',
-      description: 'Visit heritage sites in 3 different countries',
-      icon: '🌍',
+      title: 'Region Hopper',
+      description: 'Visit sites in 3 different Ethiopian regions',
+      icon: '🗺️',
       isUnlocked: false,
     ),
     Achievement(
@@ -429,7 +530,7 @@ class MockData {
     Achievement(
       id: 'a6',
       title: 'AI Curious',
-      description: 'Ask AI 50 questions about exhibits',
+      description: 'Ask AI 50 questions about Ethiopian heritage',
       icon: '🤖',
       isUnlocked: false,
     ),

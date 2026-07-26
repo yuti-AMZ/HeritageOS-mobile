@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import '../constants/app_strings.dart';
+import '../models/heritage_place.dart';
+import '../utils/exhibit_lookup.dart';
+import 'ar_screen.dart';
 
 class ArtifactScreen extends StatefulWidget {
-  const ArtifactScreen({super.key});
+  final Exhibit? exhibit;
+  final String? placeName;
+
+  const ArtifactScreen({super.key, this.exhibit, this.placeName});
+
   @override
   State<ArtifactScreen> createState() => _ArtifactScreenState();
 }
@@ -10,18 +18,61 @@ class ArtifactScreen extends StatefulWidget {
 class _ArtifactScreenState extends State<ArtifactScreen> {
   String _tab = 'history';
 
-  final _timeline = const [
-    TimelineEntry(year: '196 BCE', event: 'Decree issued at Memphis by Ptolemy V Epiphanes'),
-    TimelineEntry(year: '1799', event: 'Discovered by French soldiers during Napoleon\'s Egypt campaign'),
-    TimelineEntry(year: '1802', event: 'Transferred to British Museum after Treaty of Alexandria'),
-    TimelineEntry(year: '1822', event: 'Jean-François Champollion deciphers Egyptian hieroglyphs'),
-    TimelineEntry(year: 'Today', event: 'On permanent display in Room 4, British Museum, London'),
+  late final Exhibit _exhibit;
+  late final String _placeName;
+
+  final _defaultTimeline = const [
+    TimelineEntry(year: '1889', event: 'Treaty of Wuchale signed between Ethiopia and Italy'),
+    TimelineEntry(year: '1895', event: 'Italian forces invade from Eritrea'),
+    TimelineEntry(year: 'Mar 1, 1896', event: 'Battle of Adwa — Ethiopian victory under Menelik II'),
+    TimelineEntry(year: '1896', event: 'Treaty of Addis Ababa recognizes Ethiopian sovereignty'),
+    TimelineEntry(year: 'Today', event: 'Adwa Victory Memorial Museum preserves the legacy in Addis Ababa'),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    final fallback = ExhibitLookup.byQrCode('ADWA-DIORAMA-001');
+    _exhibit = widget.exhibit ??
+        fallback?.exhibit ??
+        const Exhibit(
+          id: 'e1',
+          name: 'Battle of Adwa Diorama',
+          description:
+              'A detailed miniature reconstruction of the Battle of Adwa, showing the decisive Ethiopian victory of 1896.',
+          imageUrl:
+              'https://images.unsplash.com/photo-1572905421176-6fa2f11a236e?w=400&h=300&fit=crop',
+          category: 'Historical',
+          qrCode: 'ADWA-DIORAMA-001',
+        );
+    _placeName =
+        widget.placeName ?? fallback?.place.name ?? 'Adwa Victory Memorial Museum';
+  }
+
+  void _openAr() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ArScreen(
+          exhibit: _exhibit,
+          placeName: _placeName,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _openAr,
+        backgroundColor: AppColors.gold,
+        foregroundColor: AppColors.green,
+        icon: const Icon(Icons.view_in_ar_rounded),
+        label: Text(AppStrings.viewInAr,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+      ),
       body: Column(
         children: [
           // Hero image
@@ -31,7 +82,7 @@ class _ArtifactScreenState extends State<ArtifactScreen> {
                 height: 280,
                 width: double.infinity,
                 child: Image.network(
-                  'https://images.unsplash.com/photo-1782466357373-515da25d313e?w=800&h=600&fit=crop',
+                  _exhibit.imageUrl,
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(color: AppColors.sand),
                 ),
@@ -61,6 +112,8 @@ class _ArtifactScreenState extends State<ArtifactScreen> {
                     _iconButton(Icons.arrow_back_ios_new_rounded, () => Navigator.pop(context)),
                     Row(
                       children: [
+                        _iconButton(Icons.view_in_ar_rounded, _openAr),
+                        const SizedBox(width: 8),
                         _iconButton(Icons.favorite_border_rounded, () {}),
                         const SizedBox(width: 8),
                         _iconButton(Icons.bookmark_border_rounded, () {}),
@@ -78,14 +131,16 @@ class _ArtifactScreenState extends State<ArtifactScreen> {
                   children: [
                     Row(
                       children: [
-                        _tag('Ancient Egypt', AppColors.gold, AppColors.green),
-                        const SizedBox(width: 8),
-                        _tag('1350 BCE', Colors.white24, Colors.white),
+                        _tag(_exhibit.category, AppColors.gold, AppColors.green),
+                        if (_exhibit.qrCode != null) ...[
+                          const SizedBox(width: 8),
+                          _tag(_exhibit.qrCode!, Colors.white24, Colors.white),
+                        ],
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Text('Rosetta Stone',
-                        style: TextStyle(
+                    Text(_exhibit.name,
+                        style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w900,
                             color: Colors.white)),
@@ -94,13 +149,11 @@ class _ArtifactScreenState extends State<ArtifactScreen> {
                       children: [
                         const Icon(Icons.location_on, size: 11, color: AppColors.gold),
                         const SizedBox(width: 4),
-                        const Text('British Museum · Room 4',
-                            style: TextStyle(fontSize: 12, color: Colors.white70)),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.star, size: 11, color: AppColors.gold),
-                        const SizedBox(width: 4),
-                        const Text('4.9 (2.4k)',
-                            style: TextStyle(fontSize: 12, color: Colors.white70)),
+                        Expanded(
+                          child: Text(_placeName,
+                              style: const TextStyle(fontSize: 12, color: Colors.white70),
+                              overflow: TextOverflow.ellipsis),
+                        ),
                       ],
                     ),
                   ],
@@ -256,7 +309,7 @@ class _ArtifactScreenState extends State<ArtifactScreen> {
                   color: AppColors.green)),
           const SizedBox(height: 10),
           Text(
-            'The Rosetta Stone is a granodiorite stele inscribed with three versions of a decree issued in Memphis, Egypt in 196 BCE during the reign of Ptolemy V Epiphanes. The top and middle texts are in Ancient Egyptian using hieroglyphic and Demotic scripts, while the bottom is in Ancient Greek.',
+            _exhibit.description,
             style: TextStyle(
                 fontSize: 14,
                 height: 1.7,
@@ -269,10 +322,10 @@ class _ArtifactScreenState extends State<ArtifactScreen> {
                   fontWeight: FontWeight.bold,
                   color: AppColors.green)),
           const SizedBox(height: 12),
-          _factRow('Material', 'Granodiorite stone'),
-          _factRow('Dimensions', '112.3 × 75.7 × 28.4 cm'),
-          _factRow('Weight', '760 kg'),
-          _factRow('Deciphered by', 'Jean-François Champollion'),
+          _factRow('Category', _exhibit.category),
+          _factRow('Museum', _placeName),
+          if (_exhibit.qrCode != null) _factRow('QR Code', _exhibit.qrCode!),
+          _factRow('AR', 'Available — tap View in AR'),
         ],
       ),
     );
@@ -303,9 +356,9 @@ class _ArtifactScreenState extends State<ArtifactScreen> {
   Widget _timelineTab() {
     return ListView.builder(
       padding: const EdgeInsets.all(20),
-      itemCount: _timeline.length,
+      itemCount: _defaultTimeline.length,
       itemBuilder: (_, i) {
-        final t = _timeline[i];
+        final t = _defaultTimeline[i];
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -320,7 +373,7 @@ class _ArtifactScreenState extends State<ArtifactScreen> {
                     border: Border.all(color: AppColors.gold, width: 2),
                   ),
                 ),
-                if (i < _timeline.length - 1)
+                if (i < _defaultTimeline.length - 1)
                   Container(width: 2, height: 48, color: AppColors.gold.withOpacity(0.25)),
               ],
             ),
@@ -352,11 +405,10 @@ class _ArtifactScreenState extends State<ArtifactScreen> {
 
   Widget _galleryTab() {
     final images = [
-      'https://images.unsplash.com/photo-1782466357373-515da25d313e?w=300&h=300&fit=crop',
+      _exhibit.imageUrl,
       'https://images.unsplash.com/photo-1770713522187-d9c16e16a15b?w=300&h=300&fit=crop',
       'https://images.unsplash.com/photo-1772617616268-a2f27d194fce?w=300&h=300&fit=crop',
       'https://images.unsplash.com/photo-1771456294161-7d09c625cf96?w=300&h=300&fit=crop',
-      'https://images.unsplash.com/photo-1765470129726-3689336ff549?w=300&h=300&fit=crop',
     ];
     return GridView.builder(
       padding: const EdgeInsets.all(20),
