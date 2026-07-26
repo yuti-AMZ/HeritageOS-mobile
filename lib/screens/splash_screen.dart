@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_strings.dart';
 import '../providers/auth_provider.dart';
-import 'onboarding_screen.dart';
+import 'login_screen.dart';
 import 'home_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -36,13 +36,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         );
       } else {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
         );
       }
     } catch (e) {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
       );
     }
   }

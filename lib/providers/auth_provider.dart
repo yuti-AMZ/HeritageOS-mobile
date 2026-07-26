@@ -13,8 +13,11 @@ class DemoUser {
 
 final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());
 
+final isLoggedInProvider = StateProvider<bool>((ref) => false);
+
 final authStateProvider = StreamProvider<DemoUser?>((ref) {
-  // Demo mode: always return a logged-in demo user
+  final isLoggedIn = ref.watch(isLoggedInProvider);
+  if (!isLoggedIn) return Stream.value(null);
   return Stream.value(DemoUser(
     uid: 'demo-uid-123',
     displayName: 'Heritage Explorer',
@@ -41,23 +44,27 @@ class AuthNotifier extends StateNotifier<AsyncValue<void>> {
   Future<void> signIn(String email, String password) async {
     state = const AsyncValue.loading();
     await Future.delayed(const Duration(milliseconds: 500));
+    ref.read(isLoggedInProvider.notifier).state = true;
     state = const AsyncValue.data(null);
   }
 
   Future<void> signUp(String email, String password, String name) async {
     state = const AsyncValue.loading();
     await Future.delayed(const Duration(milliseconds: 500));
+    ref.read(isLoggedInProvider.notifier).state = true;
     state = const AsyncValue.data(null);
   }
 
   Future<void> signInWithGoogle() async {
     state = const AsyncValue.loading();
     await Future.delayed(const Duration(milliseconds: 500));
+    ref.read(isLoggedInProvider.notifier).state = true;
     state = const AsyncValue.data(null);
   }
 
   Future<void> signOut() async {
     state = const AsyncValue.loading();
+    ref.read(isLoggedInProvider.notifier).state = false;
     await Future.delayed(const Duration(milliseconds: 300));
     state = const AsyncValue.data(null);
   }
