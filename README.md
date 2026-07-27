@@ -31,7 +31,7 @@
 
 HeritageOS turns a visit to an Ethiopian museum or heritage site into a guided, interactive experience. Point the app at an exhibit's QR code to pull up its story, listen to an audio guide, ask an AI guide follow-up questions, or preview an artifact in AR.
 
-The app currently ships with eight curated Ethiopian heritage sites — from the Adwa Victory Memorial Museum to the rock-hewn churches of Lalibela — including their exhibits, timelines, ticketing details, and visitor reviews.
+The app currently ships with eight curated Ethiopian heritage sites from the Adwa Victory Memorial Museum to the rock-hewn churches of Lalibela  including their exhibits, timelines, ticketing details, and visitor reviews.
 
 ## Features
 
